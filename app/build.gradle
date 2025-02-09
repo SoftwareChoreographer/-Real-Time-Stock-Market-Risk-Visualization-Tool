@@ -1,0 +1,58 @@
+plugins {
+    // Apply the application plugin to add support for building a CLI application in Java.
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation libs.junit.jupiter
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // This dependency is used by the application.
+    implementation libs.guava
+
+    implementation 'org.json:json:20250107'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    
+    implementation group: 'com.yahoofinance-api', name: 'YahooFinanceAPI', version: '3.17.0'
+
+    // JavaFX dependencies
+    implementation 'org.openjfx:javafx-controls:19'
+    implementation 'org.openjfx:javafx-graphics:19'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'org.example.App'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaExec) {
+    // Ensure JavaFX modules are available when running the app
+    jvmArgs = [
+        '--module-path', '/path/to/javafx/lib',
+        '--add-modules', 'javafx.controls,javafx.graphics'
+    ]
+}
+
+javafx {
+    version = "19"
+    modules = [ 'javafx.controls', 'javafx.graphics' ]
+}
