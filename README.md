@@ -61,7 +61,7 @@ The **Real-Time Stock Price Tracker** is a JavaFX application that retrieves and
 ✅ **Solution:** Check that your JavaFX SDK is correctly installed and added to your classpath.
 
 ## 👥 Contributors
-- **Your Name** @SoftwareChorepgrapher
+- **@SoftwareChorepgrapher**
 
 ## 📜 License
 This project is licensed under the **MIT License**.
