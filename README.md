@@ -1,71 +1,50 @@
-# Real-Time Stock Price Tracker
+# Real-Time Stock Market Risk Visualization Tool
 
-## 📌 Introduction
-The **Real-Time Stock Price Tracker** is a JavaFX application that retrieves and visualizes live stock prices using the **Alpha Vantage API**. The application fetches stock prices every 5 seconds and plots them on a real-time line chart.
+A small JavaFX application that polls Alpha Vantage for a stock's latest price and plots it in real time.
 
-## 📖 Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Dependencies](#dependencies)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
-- [Contributors](#contributors)
-- [License](#license)
+This branch includes:
+- Refactoring: extraction of AlphaVantageClient for HTTP + JSON parsing
+- App improvements: better logging, configuration, and safer UI updates
+- This README with run instructions
 
-## ⚙️ Installation
-1. **Clone the repository**  
-   ```sh
-   git clone https://github.com/your-repo/stock-price-tracker.git
-   cd stock-price-tracker
-   ```
-2. **Install JavaFX**  
-   Make sure you have Java 11+ installed along with JavaFX SDK. You can download JavaFX from:  
-   [https://gluonhq.com/products/javafx/](https://gluonhq.com/products/javafx/)  
-   
-3. **Set up API Key**  
-   - Get a free API key from [Alpha Vantage](https://www.alphavantage.co/support/#api-key).  
-   - Save the key in a file named `api_key.txt` in the root directory.
+## Prerequisites
 
-4. **Run the application**  
-   ```sh
-   javac --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml App.java
-   java --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml App
-   ```
+- Java 11+ (or newer; JavaFX should be compatible with your JDK)  
+- JavaFX on the module path (or use a JavaFX-enabled JDK / SDK distribution). If using OpenJFX, install the JavaFX SDK appropriate to your platform.
+- Maven or Gradle to build, or run from an IDE that supports JavaFX.
 
-## 🚀 Usage
-- Launch the application to start tracking stock prices.
-- The stock price data updates automatically every **5 seconds**.
-- View the real-time price movement in the **line chart**.
+## Getting an API key
 
-## ✨ Features
-- 📈 **Real-Time Stock Prices**: Fetches stock prices using the Alpha Vantage API.
-- 📊 **Live Graphing**: Displays stock prices dynamically on a **JavaFX LineChart**.
-- ⏳ **Automatic Updates**: Refreshes every **5 seconds**.
-- 💾 **Data Management**: Maintains the latest 100 data points to keep the graph clean.
+1. Get a free API key from Alpha Vantage: https://www.alphavantage.co/support/#api-key
+2. Provide the API key to the application using one of:
+   - Environment variable: `ALPHA_VANTAGE_API_KEY`
+   - Or create a file named `api_key.txt` in the working directory containing the key.
 
-## 📦 Dependencies
-- JavaFX
-- Alpha Vantage API (for stock price data)
-- JSON (for parsing API response)
+Note: The free Alpha Vantage tier has rate limits (typically 5 calls per minute). The app defaults to a 12 second poll interval to stay comfortably within that limit. If you change polling, respect the rate limits.
 
-## 🔧 Configuration
-- Modify the stock symbol in the `queryStockPrice()` method to track a different stock.
-- Adjust the refresh rate in the `startStockPriceQuery()` method (`TimeUnit.SECONDS.sleep(5);`).
+## Run (example)
 
-## 🛠 Troubleshooting
-**Issue:** "Error fetching stock prices"  
-✅ **Solution:** Ensure your API key is correct and not exceeding the free request limit.
+With Maven (adjust JavaFX module flags as needed):
+- Set API key (example on macOS / Linux):
+  export ALPHA_VANTAGE_API_KEY=your_key_here
+- Run:
+  mvn -Dexec.mainClass="org.example.App" exec:java
 
-**Issue:** "JavaFX runtime error"  
-✅ **Solution:** Check that your JavaFX SDK is correctly installed and added to your classpath.
+Or via `java` (if you build a jar and include JavaFX on classpath/module-path):
+  java -jar myapp.jar
 
-## 👥 Contributors
-- **@SoftwareChorepgrapher**
+You can also pass runtime overrides via system properties:
+- `-Dstock.symbol=AAPL`         (default: AAPL)
+- `-Dpoll.interval.seconds=12`  (default: 12)
+- `-Dmax.points=100`            (default: 100)
 
-## 📜 License
-This project is licensed under the **MIT License**.
+Example (run with custom symbol & interval):
+  mvn -Dstock.symbol=MSFT -Dpoll.interval.seconds=15 -Dexec.mainClass="org.example.App" exec:java
 
----
+## Building
 
-📌 **Note**: Make sure you update the paths in the `javac` and `java` commands with your JavaFX SDK location.
+Use your preferred tool (Maven/Gradle/IDE). Ensure JavaFX dependencies are set when building/running outside of an IDE.
+
+## Testing
+
+- Unit tests can be added for AlphaVantageClient by mocking HTTP responses
